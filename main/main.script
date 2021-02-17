@@ -1,0 +1,118 @@
+Gcairo = require("scripts/cairo_ui/base")
+require("scripts/utils/xml-reader")
+
+function init(self)
+	-- Add initialization code here
+	-- Remove this function if not needed
+
+	msg.post(".", "acquire_input_focus")
+	self.mouse = vmath.vector3(0, 0, 0)
+	self.buttons = { 0,0,0 }
+		
+	Gcairo.newObject	= nil
+	Gcairo:Init(RENDER_WIDTH, RENDER_HEIGHT)	
+
+	msg.post("/go#main1", "initgui")
+
+	-- Some icons on screen to enable/disable
+	self.icons	=	{}
+	self.icons.facebook = {
+		x=200, y=60, enabled=0,
+		enableImage=Gcairo:LoadImage("fbEnable", "data/icons/generic_obj_ask_64.png"),
+		disableImage=Gcairo:LoadImage("fbDisable", "data/icons/generic_obj_box_64.png"),
+	}
+
+	self.icons.twitter = {
+		x=270, y=60, enabled=0,
+		enableImage=Gcairo:LoadImage("twEnable", "data/icons/generic_obj_add_64.png"),
+		disableImage=Gcairo:LoadImage("twDisable", "data/icons/generic_obj_box_64.png"),
+	}
+
+	self.icons.google = {
+		x=340, y=60, enabled=0,
+		enableImage=Gcairo:LoadImage("ggEnable", "data/icons/generic_obj_home_64.png"),
+		disableImage=Gcairo:LoadImage("ggDisable", "data/icons/generic_obj_box_64.png"),
+	}
+
+	self.image1 = Gcairo:LoadImage("icon1", "data/icons/generic_obj_add_64.png")
+
+	--self.multi[1] = Gcairo:LoadImage("img_b1", "/data/image/sample1.png", 1)
+	--self.multi[2] = Gcairo:LoadImage("img_b2", "/data/image/sample2.png", 2)
+	--self.multi[3] = Gcairo:LoadImage("img_b3", "/data/image/sample3.png", 3)
+	
+		
+	-- Test the xml Loader
+	self.lsurf = Gcairo:LoadSvg("/data/svg/test01.svg")
+	-- DumpXml(lsurf)
+
+	-- Override some of the modes for sliders and exploders
+	-- CAIRO_UI.EXPLODER_MODE = "outExpo"
+	-- CAIRO_UI.SLIDER_MODE = "outBounce"	
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+	Gcairo:Finish()
+end
+
+function update(self, dt)
+
+	local tcolor = { r=1.0, b=0.0, g=0.0, a=1.0 }
+	Gcairo:Begin(dt)
+
+	Gcairo:RenderBox(30, 30, 200, 50, 5)
+	Gcairo:RenderText("GARY", 45, 65, 30, tcolor )
+
+ 	-- A Content window of 'stuff' to show
+ 	local content = Gcairo:List("", 5, 5, 400, 300)
+ 	local nodes = {}
+ 	nodes[1] = { name="Information", ntype=CAIRO_TYPE.TEXT, size=20 }
+ 	nodes[2] = { name="   some 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
+ 	nodes[3] = { name="   more 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
+ 	nodes[4] = { name="Do Stuff", ntype=CAIRO_TYPE.BUTTON, size=20, border=2, corner=5, colorA=tcolor, colorB=tcolor }
+ 
+ 	local line1 = {}
+ 	line1[1] = { name="test1", ntype=CAIRO_TYPE.IMAGE, image=self.image1, size=30, color=tcolor }
+ 	line1[2] = { name="space1", size=50 }
+ 	line1[3] = { name="test2", ntype=CAIRO_TYPE.IMAGE, image=self.image1, size=40, color=tcolor }
+ 
+ 	nodes[5] = { name="space2", size=40 }
+ 	nodes[6] = { name="line1", ntype=CAIRO_TYPE.HLINE, size=30, nodes = line1 }
+ 	nodes[7] = { name="Another Line", ntype=CAIRO_TYPE.TEXT, size=30 }
+ 	content.nodes = nodes
+
+	Gcairo:SlideOut("Main Menu", nil, CAIRO_UI.LEFT, 100, 40, 0, content)
+ 	Gcairo:Exploder("Test1", nil, CAIRO_UI.RIGHT, 400, 50, 100, 20, 0, content)
+ 	Gcairo:Exploder("Test2", self.image1, CAIRO_UI.RIGHT, 400, 400, 120, 100, 0, content)
+ 
+	Gcairo:RenderSvg(50, 50, self.lsurf)
+	Gcairo:Update(self.mouse.x, self.mouse.y, self.buttons, dt)
+	Gcairo:Render()
+	msg.post("/go#main1", "rendergui")
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+	self.mouse.x = action.x
+	self.mouse.y = RENDER_HEIGHT - action.y
+
+	if action_id == hash("touch") then 
+		if action.pressed then
+			self.buttons[1] = true
+		else
+			self.buttons[1] = false
+		end
+	end	
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
