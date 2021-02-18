@@ -12,7 +12,7 @@ Sample:
 
 ![alt text](https://github.com/dlannan/defold-cairo/blob/main/data/screenshots/demo-2021-02-19_00-42.png "Demo V0.1")
 
-Only tested on Liunx, but should work on Windows and OSX. Android and IOS I need to build cairo for them to be usable. 
+Only tested on Linux, but should work on Windows and OSX. Android and IOS I need to build cairo for them to be usable. 
 
 Im working on:
 - making this SVG import much better (support wider SVG versions).
