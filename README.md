@@ -22,6 +22,9 @@ Im working on:
 
 ## Notes
 Performance is average. A full screen of 1440x1050 with large widgets will get around 50fps on a mid level PC. 
-All drawing is CPU compositied - which is _slow_ and its done every frame. This will change. Eventually all rendering will be via cached surfaces, which should result in 10-100x performance improvements (depending on the dynamic nature of your UI). 
+
+All drawing is CPU compositied - which is _slow_ and its done every frame. 
+
+This will change. Eventually all rendering will be via cached surfaces, which should result in 10-100x performance improvements (depending on the dynamic nature of your UI). 
 
 ---
