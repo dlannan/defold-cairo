@@ -178,6 +178,11 @@ function images:LoadImage(name, filename, forcenew)
     } 
 
     local fh = io.open(filename, "rb")
+    if(fh == nil) then 
+        print("Cannot load image: ", filename)
+        return nil
+    end
+    
     params.data = fh:read("*a")
     fh:close()   
     params.filename = filename -- Load from file.

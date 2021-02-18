@@ -1,6 +1,9 @@
 Gcairo = require("scripts/cairo_ui/base")
 require("scripts/utils/xml-reader")
 
+local tcolor = { r=0.0, b=1.0, g=0.0, a=1.0 }
+local vcolor = { r=1.0, b=0.0, g=0.0, a=1.0 }
+
 function init(self)
 	-- Add initialization code here
 	-- Remove this function if not needed
@@ -16,25 +19,9 @@ function init(self)
 
 	-- Some icons on screen to enable/disable
 	self.icons	=	{}
-	self.icons.facebook = {
-		x=200, y=60, enabled=0,
-		enableImage=Gcairo:LoadImage("fbEnable", "data/icons/generic_obj_ask_64.png"),
-		disableImage=Gcairo:LoadImage("fbDisable", "data/icons/generic_obj_box_64.png"),
-	}
-
-	self.icons.twitter = {
-		x=270, y=60, enabled=0,
-		enableImage=Gcairo:LoadImage("twEnable", "data/icons/generic_obj_add_64.png"),
-		disableImage=Gcairo:LoadImage("twDisable", "data/icons/generic_obj_box_64.png"),
-	}
-
-	self.icons.google = {
-		x=340, y=60, enabled=0,
-		enableImage=Gcairo:LoadImage("ggEnable", "data/icons/generic_obj_home_64.png"),
-		disableImage=Gcairo:LoadImage("ggDisable", "data/icons/generic_obj_box_64.png"),
-	}
-
-	self.image1 = Gcairo:LoadImage("icon1", "data/icons/generic_obj_add_64.png")
+	self.image1 = Gcairo:LoadImage("icon1", "data/icons/feather/plus-circle.png")
+	self.image2 = Gcairo:LoadImage("icon1", "data/icons/feather/coffee.png")	
+	self.image3 = Gcairo:LoadImage("icon1", "data/icons/feather/chrome.png")	
 
 	self.multi = {}
 	self.multi[1] = Gcairo:LoadImage("img_b1", "data/images/sample1.png")
@@ -42,8 +29,7 @@ function init(self)
 	self.multi[3] = Gcairo:LoadImage("img_b3", "data/images/sample3.png")
 	-- Scale trick to make the images 320 wide
 	--for k,v in pairs(self.multi) do v.scalex = 0.5; v.scaley = 0.5 end
-	
-		
+
 	-- Test the xml Loader
 	self.lsurf = Gcairo:LoadSvg("/data/svg/demo.svg")
 	-- DumpXml(lsurf)
@@ -51,6 +37,25 @@ function init(self)
 	-- Override some of the modes for sliders and exploders
 	-- CAIRO_UI.EXPLODER_MODE = "outExpo"
 	-- CAIRO_UI.SLIDER_MODE = "outBounce"	
+
+	-- A Content window of 'stuff' to show
+	self.content = Gcairo:List("", 5, 5, 400, 300)
+	local nodes = {}
+	nodes[1] = { name="Information", ntype=CAIRO_TYPE.TEXT, size=20 }
+	nodes[2] = { name="   some 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
+	nodes[3] = { name="   more 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
+	nodes[4] = { name="Do Stuff", ntype=CAIRO_TYPE.BUTTON, size=20, border=2, corner=5, colorA=tcolor, colorB=vcolor }
+
+	local line1 = {}
+	line1[1] = { name="test1", ntype=CAIRO_TYPE.IMAGE, image=self.image2, size=30, color=tcolor }
+	line1[2] = { name="space1", size=50 }
+	line1[3] = { name="test2", ntype=CAIRO_TYPE.IMAGE, image=self.image3, size=40, color=tcolor }
+
+	nodes[5] = { name="space2", size=40 }
+	nodes[6] = { name="line1", ntype=CAIRO_TYPE.HLINE, size=30, nodes = line1 }
+	nodes[7] = { name="Another Line", ntype=CAIRO_TYPE.TEXT, size=30 }
+	self.content.nodes = nodes
+		
 end
 
 function final(self)
@@ -59,40 +64,28 @@ function final(self)
 	Gcairo:Finish()
 end
 
+-- Each render line is effectively a render layer. Thus the order things are rendered here 
+-- control how objects are layered on screen. They can be dynamically shifted.
+--  TODO: Layers will be single surfaces and textures within Defold for hi perf.
+local bgcolor = { r=0.5, g=0.2, b=0.3, a=1.0 }
+
 function update(self, dt)
 
-	local tcolor = { r=1.0, b=0.0, g=0.0, a=1.0 }
 	Gcairo:Begin(dt)
 
+	Gcairo:RenderBox( 190, 90, 660, 600, 0, bgcolor, bgcolor)
+	Gcairo:RenderMultiSlideImage("prj_configure", self.multi, 200, 100, 640, 2.3, 0.67, nil)
+	
 	Gcairo:RenderBox(30, 30, 200, 50, 5)
-	Gcairo:RenderText("GARY", 45, 65, 30, tcolor )
+	Gcairo:RenderText("Demo V0.1", 45, 65, 30, tcolor )
 
- 	-- A Content window of 'stuff' to show
- 	local content = Gcairo:List("", 5, 5, 400, 300)
- 	local nodes = {}
- 	nodes[1] = { name="Information", ntype=CAIRO_TYPE.TEXT, size=20 }
- 	nodes[2] = { name="   some 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
- 	nodes[3] = { name="   more 1234", ntype=CAIRO_TYPE.TEXT, size=20 }
- 	nodes[4] = { name="Do Stuff", ntype=CAIRO_TYPE.BUTTON, size=20, border=2, corner=5, colorA=tcolor, colorB=tcolor }
- 
- 	local line1 = {}
- 	line1[1] = { name="test1", ntype=CAIRO_TYPE.IMAGE, image=self.image1, size=30, color=tcolor }
- 	line1[2] = { name="space1", size=50 }
- 	line1[3] = { name="test2", ntype=CAIRO_TYPE.IMAGE, image=self.image1, size=40, color=tcolor }
- 
- 	nodes[5] = { name="space2", size=40 }
- 	nodes[6] = { name="line1", ntype=CAIRO_TYPE.HLINE, size=30, nodes = line1 }
- 	nodes[7] = { name="Another Line", ntype=CAIRO_TYPE.TEXT, size=30 }
- 	content.nodes = nodes
-
-	Gcairo:SlideOut("Main Menu", nil, CAIRO_UI.LEFT, 100, 40, 0, content)
- 	Gcairo:Exploder("Test1", nil, CAIRO_UI.RIGHT, 400, 50, 100, 20, 0, content)
-	Gcairo:Exploder("Test2", self.image1, CAIRO_UI.RIGHT, 400, 400, 120, 100, 0, content)
+	Gcairo:SlideOut("Main Menu", nil, CAIRO_UI.LEFT, 100, 40, 0, self.content, 0.1)
+	Gcairo:Exploder("Exploder 1", nil, CAIRO_UI.RIGHT, 400, 50, 140, 24, 0, self.content, 0.2)
+	Gcairo:Exploder("Test2", self.image1, CAIRO_UI.RIGHT, 300, 50, 32, 32, 0, self.content, 0.4)
 
 	--Gcairo:RenderMultiImage("prj_configure", self.multi, 100, 100, 2.3, 0.67, nil)
-	Gcairo:RenderMultiSlideImage("prj_configure", self.multi, 600, 100, 320, 2.3, 0.67, nil)
  
-	Gcairo:RenderSvg(50, 50, self.lsurf)
+	--Gcairo:RenderSvg(50, 50, self.lsurf)
 	Gcairo:Update(self.mouse.x, self.mouse.y, self.buttons, dt)
 	Gcairo:Render()
 	msg.post("/go#main1", "rendergui")

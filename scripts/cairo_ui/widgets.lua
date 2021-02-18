@@ -600,13 +600,13 @@ local function SlideOutHandler( name, cairo_obj)
 	-- Change to moving on this callback (callback is a mouse up)
 	if(sostate.state == CAIRO_STATE.SO_STATES.OUT) then
 		sostate.state = CAIRO_STATE.SO_STATES.MOVING_OUT	
-		sostate.tween = tween( CAIRO_UI.SLIDER_TWEEN_SPEED, sostate, { move=sostate.target }, CAIRO_UI.SLIDER_MODE, TweenDone, cairo_obj.slideOutStates, name)		
+		sostate.tween = tween( sostate.speed, sostate, { move=sostate.target }, CAIRO_UI.SLIDER_MODE, TweenDone, cairo_obj.slideOutStates, name)		
 		return		
 	end
 	
 	if(sostate.state == CAIRO_STATE.SO_STATES.IN) then
 		sostate.state = CAIRO_STATE.SO_STATES.MOVING_IN
-		sostate.tween = tween( CAIRO_UI.SLIDER_TWEEN_SPEED, sostate, { move=0 }, CAIRO_UI.SLIDER_MODE,  TweenDone, cairo_obj.slideOutStates, name)
+		sostate.tween = tween( sostate.speed, sostate, { move=0 }, CAIRO_UI.SLIDER_MODE,  TweenDone, cairo_obj.slideOutStates, name)
 		return		
 	end	
 end
@@ -614,13 +614,14 @@ end
 ------------------------------------------------------------------------------------------------------------
 -- Return current position
 
-function widgets:SlideOut(name, image, align, pos, size, corner, list)
+function widgets:SlideOut(name, image, align, pos, size, corner, list, speed)
 	-- Work out "where" the slideout is currently.
 	if(self.slideOutStates[name] == nil) then 
-		state = { state=CAIRO_STATE.SO_STATES.INITIAL, move=0, scroll=0, target=list.width }
+		state = { state=CAIRO_STATE.SO_STATES.INITIAL, move=0, scroll=0, target=list.width, speed=speed }
 	else
 		state = self.slideOutStates[name]
 	end
+	if(state.speed == nil) then state.speed = CAIRO_UI.SLIDER_TWEEN_SPEED end
 
 	local style 	= self.style
 	local left 		= state.move;
@@ -675,13 +676,13 @@ local function ExploderHandler(name, cairo_obj)
 	-- Change to moving on this callback (callback is a mouse up)
 	if(sostate.state == CAIRO_STATE.SO_STATES.OUT) then
 		sostate.state = CAIRO_STATE.SO_STATES.MOVING_OUT	
-		sostate.tween = tween(CAIRO_UI.EXPLODER_TWEEN_SPEED, sostate, { move=1.0 }, CAIRO_UI.EXPLODER_MODE, TweenDone, cairo_obj.exploderStates, name)
+		sostate.tween = tween(sostate.speed, sostate, { move=1.0 }, CAIRO_UI.EXPLODER_MODE, TweenDone, cairo_obj.exploderStates, name)
 		return		
 	end
 
 	if(sostate.state == CAIRO_STATE.SO_STATES.IN) then
 		sostate.state = CAIRO_STATE.SO_STATES.MOVING_IN
-		sostate.tween = tween(CAIRO_UI.EXPLODER_TWEEN_SPEED, sostate, { move=0 }, CAIRO_UI.EXPLODER_MODE,  TweenDone, cairo_obj.exploderStates, name)
+		sostate.tween = tween(sostate.speed, sostate, { move=0 }, CAIRO_UI.EXPLODER_MODE,  TweenDone, cairo_obj.exploderStates, name)
 		return		
 	end
 end
@@ -689,13 +690,14 @@ end
 ------------------------------------------------------------------------------------------------------------
 -- Return current position
 
-function widgets:Exploder(name, image, align, x, y, hsize, vsize, corner, list)
+function widgets:Exploder(name, image, align, x, y, hsize, vsize, corner, list, speed)
 	-- Work out "where" the exploder is currently.
 	if(self.exploderStates[name] == nil) then 
-		state = { state=CAIRO_STATE.SO_STATES.INITIAL, move=0, scroll=0, target=1.0 }
+		state = { state=CAIRO_STATE.SO_STATES.INITIAL, move=0, scroll=0, target=1.0, speed=speed }
 	else
 		state = self.exploderStates[name]
 	end
+	if(state.speed == nil) then state.speed = CAIRO_UI.EXPLODER_TWEEN_SPEED end
 
 	local left 		= x;
 	local top 		= y;

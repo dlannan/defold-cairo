@@ -103,6 +103,7 @@ cairo_ui.style.font_name			= "Century Gothic"
 -- This list is checked for mouseover, mousedown, mouseup and mousemove type events
 -- List is ordered based on declaration order. If you need a button to the front, then delete it and add it again.
 cairo_ui.objectList		= {}
+cairo_ui.objectCount 	= 1
 
 ------------------------------------------------------------------------------------------------------------
 -- Simple cache for images - recommend preloading!!
@@ -274,18 +275,18 @@ function cairo_ui:Init(width, height)
 	cr.cairo_scale(self.ctx, self.scaleX, self.scaleY)
 
 	-- Builtin images for use with widgets
-	self.img_select = self:LoadImage("icon_tick", "data/icons/generic_obj_tick_64.png")
-	self.img_folder	= self:LoadImage("icon_folder", "data/icons/generic_obj_folder_64.png")
+	self.img_select = self:LoadImage("icon_tick", "data/icons/feather/check-square.png")
+	self.img_folder	= self:LoadImage("icon_folder", "data/icons/feather/folder.png")
 	self.img_folder.scalex = 0.35
 	self.img_folder.scaley = 0.35
 	
 	if(self.img_arrowup == nil) then 
-		self.img_arrowup = self:LoadImage("arrowup", "data/icons/generic_arrowup_64.png") 
+		self.img_arrowup = self:LoadImage("arrowup", "data/icons/feather/arrow-up-circle.png") 
 		self.img_arrowup.scalex = 16 / self.img_arrowup.width
 		self.img_arrowup.scaley = 16 / self.img_arrowup.height
 	end
 	if(self.img_arrowdn == nil) then 
-		self.img_arrowdn = self:LoadImage("arrowdn", "data/icons/generic_arrowdn_64.png") 
+		self.img_arrowdn = self:LoadImage("arrowdn", "data/icons/feather/arrow-down-circle.png") 
 		self.img_arrowdn.scalex = 16 / self.img_arrowdn.width
 		self.img_arrowdn.scaley = 16 / self.img_arrowdn.height
 	end
@@ -514,7 +515,7 @@ end
 ------------------------------------------------------------------------------------------------------------
 -- Render a user interface 'box'
 
-function cairo_ui:RenderBox(x, y, width, height, corner)
+function cairo_ui:RenderBox(x, y, width, height, corner, bgcolor, bdrcolor)
 	-- a custom shape that could be wrapped in a function --
 	local aspect        = 1.0     			-- aspect ratio --
 	
@@ -528,9 +529,12 @@ function cairo_ui:RenderBox(x, y, width, height, corner)
 	local colorB = self.style.button_border_color	
 	local border = self.style.border_width
 
+	if(bgcolor) then colorA = bgcolor end
+	if(bdrcolor) then colorB = bdrcolor end
+	
     cr.cairo_save (self.ctx)
 
-	cr.cairo_set_source_rgba( self.ctx, colorA.r, colorA.g, colorA.b, colorA.a)
+	cr.cairo_set_source_rgba( self.ctx, colorA.b, colorA.g, colorA.r, colorA.a)
 	cr.cairo_new_path( self.ctx )
 	cr.cairo_arc( self.ctx,x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
 	cr.cairo_arc( self.ctx, x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
@@ -540,7 +544,7 @@ function cairo_ui:RenderBox(x, y, width, height, corner)
 
 	cr.cairo_fill_preserve( self.ctx )
 
-	cr.cairo_set_source_rgba( self.ctx,  colorB.r, colorB.g, colorB.b, colorB.a )
+	cr.cairo_set_source_rgba( self.ctx,  colorB.b, colorB.g, colorB.r, colorB.a )
 	cr.cairo_set_line_width( self.ctx, border)
 	cr.cairo_stroke( self.ctx )
 
