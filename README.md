@@ -4,6 +4,14 @@ The aim is to provide a cairo based UI for Defold to make building interesting a
 
 The current systems uses a state manager to control the flow of UI execution. This is _not_ required. This is to make building GUI applications a little easier and it maps in nicely to Defold state processes.
 
+## Libraries
+All of this wouldnt work without some awesome libs:
+- Cairo toolkit [ https://www.cairographics.org/ ]
+- ImageLoader Extension for Defold   [ https://github.com/Lerg/extension-imageloader ]
+- xml2lua for Svg loading   [ https://github.com/manoelcampos/xml2lua ]
+- feather icons   [ https://feathericons.com/ ]
+If I have missed anyone, please let me know. 
+
 ## Development
 Feb 2021:
 In its current state its very rudimentary. It has support for a number of widget types and some very basic V1.0 svg.
