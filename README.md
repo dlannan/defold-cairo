@@ -10,6 +10,7 @@ All of this wouldnt work without some awesome libs:
 - ImageLoader Extension for Defold   [ https://github.com/Lerg/extension-imageloader ]
 - xml2lua for Svg loading   [ https://github.com/manoelcampos/xml2lua ]
 - feather icons   [ https://feathericons.com/ ]
+
 If I have missed anyone, please let me know. 
 
 ## Development
