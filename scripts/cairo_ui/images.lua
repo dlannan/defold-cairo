@@ -35,22 +35,24 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 
-function images:DataImage( width, height, indata )
+function images:DataImage( width, height, indata, convfname )
 
-	local data = ffi.new( "uint8_t["..( width * height * 4 ).."]" )
+    local data = ffi.new( "uint8_t["..( width * height * 4 ).."]" )
     if indata then
         ffi.copy(data, indata, width * height * 4 )
     end
-	
-	-- Make a default surface we will render to
-	local sf = cr.cairo_image_surface_create_for_data( data, cr.CAIRO_FORMAT_ARGB32, width, height, width * 4 );
-	local gen_name = "DataImage"..self.image_counter
-	local newImage = { name=gen_name, iname=gen_name, otype=CAIRO_TYPE.IMAGE, filename=nil, image=sf, data=data, width=width, height=height, scalex=1.0, scaley=1.0 }
 
-	self.imageList[gen_name] = newImage
-	self.image_counter = self.image_counter + 1
+    -- Make a default surface we will render to
+    local sf = cr.cairo_image_surface_create_for_data( data, cr.CAIRO_FORMAT_ARGB32, width, height, width * 4 );
+    local gen_name = "DataImage"..self.image_counter
+    if(convfname) then gen_name = convfname end
+    local newImage = { name=gen_name, iname=gen_name, otype=CAIRO_TYPE.IMAGE, filename=nil, image=sf, data=data, width=width, height=height, scalex=1.0, scaley=1.0 }
 
-	return newImage
+    if(convfname == nil) then
+        self.imageList[gen_name] = newImage 
+        self.image_counter = self.image_counter + 1
+    end
+    return newImage
 end
 
 ------------------------------------------------------------------------------------------------------------
@@ -84,16 +86,17 @@ function images:BGRImage(image)
 
     local data = cr.cairo_image_surface_get_data(image.image)
     local newdata = ffi.new("uint8_t["..(image.width * image.height * 4).."]")
+print(data, image.height, image.width)
 
-    for i=0, image.width * image.height * 4, 4 do
-       newdata[i] = data[i+2]
-       newdata[i+1] = data[i+1]
-       newdata[i+2] = data[i]
-       newdata[i+3] = data[i+3]
+    for i=0, image.width * image.height - 1 do
+        newdata[i * 4] = data[i * 4]
+        newdata[i * 4+1] = data[i * 4+2]
+        newdata[i * 4+2] = data[i * 4+1]
+        newdata[i * 4+3] = data[i * 4+3]
     end
 
-    image = self:DataImage(image.width, image.height, newdata)
-    return image
+    local bgrimage = self:DataImage(image.width, image.height, newdata, image.iname)
+    return bgrimage
 end
 
 ------------------------------------------------------------------------------------------------------------
@@ -155,27 +158,37 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 -- This allows button rendering to be deferred if needed
+--  NOTE: Now supports jpg and png internally from imageloader
 
 function images:LoadImage(name, filename, forcenew)
-	
-	local convfname = self:GetConvName(name, filename)
-	local lookup = self.imageList[convfname]
-	if forcenew == nil then
-		if lookup ~= nil then 
-			return lookup
-		end
-	end
-	
-	local image = cr.cairo_image_surface_create_from_png( filename );
-    if image == nil then return nil end
 
-	local w = cr.cairo_image_surface_get_width( image);
-	local h = cr.cairo_image_surface_get_height( image);
+    local convfname = self:GetConvName(name, filename)
+    local lookup = self.imageList[convfname]
+    if forcenew == nil then
+        if lookup ~= nil then 
+            return lookup
+        end
+    end
 
-	local newImage = { name=name, iname=convfname, otype=CAIRO_TYPE.IMAGE, filename=filename, image=image, width=w, height=h, scalex=1.0, scaley=1.0 }
-	
-	self.imageList[convfname] = newImage
-	return newImage 
+    local params = {
+        --no_async = true,
+        channels = 4,
+        no_vertical_flip = true,
+        --info = true
+    } 
+
+    local fh = io.open(filename, "rb")
+    params.data = fh:read("*a")
+    fh:close()   
+    params.filename = filename -- Load from file.
+    
+    local image_resource = imageloader.load(params) -- Load image.
+    local datastring = buffer.get_bytes(image_resource.buffer, hash("pixels"))
+    local dataarray = ffi.string(datastring, image_resource.header.width * image_resource.header.height * 4)
+
+    local newImage = self:DataImage(image_resource.header.width, image_resource.header.height, ffi.cast("uint8_t *", dataarray), convfname)
+    self.imageList[convfname] = newImage
+    return newImage 
 end
 
 ------------------------------------------------------------------------------------------------------------

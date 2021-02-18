@@ -36,13 +36,16 @@ function init(self)
 
 	self.image1 = Gcairo:LoadImage("icon1", "data/icons/generic_obj_add_64.png")
 
-	--self.multi[1] = Gcairo:LoadImage("img_b1", "/data/image/sample1.png", 1)
-	--self.multi[2] = Gcairo:LoadImage("img_b2", "/data/image/sample2.png", 2)
-	--self.multi[3] = Gcairo:LoadImage("img_b3", "/data/image/sample3.png", 3)
+	self.multi = {}
+	self.multi[1] = Gcairo:LoadImage("img_b1", "data/images/sample1.png")
+	self.multi[2] = Gcairo:LoadImage("img_b2", "data/images/sample2.png")
+	self.multi[3] = Gcairo:LoadImage("img_b3", "data/images/sample3.png")
+	-- Scale trick to make the images 320 wide
+	--for k,v in pairs(self.multi) do v.scalex = 0.5; v.scaley = 0.5 end
 	
 		
 	-- Test the xml Loader
-	self.lsurf = Gcairo:LoadSvg("/data/svg/test01.svg")
+	self.lsurf = Gcairo:LoadSvg("/data/svg/demo.svg")
 	-- DumpXml(lsurf)
 
 	-- Override some of the modes for sliders and exploders
@@ -84,7 +87,10 @@ function update(self, dt)
 
 	Gcairo:SlideOut("Main Menu", nil, CAIRO_UI.LEFT, 100, 40, 0, content)
  	Gcairo:Exploder("Test1", nil, CAIRO_UI.RIGHT, 400, 50, 100, 20, 0, content)
- 	Gcairo:Exploder("Test2", self.image1, CAIRO_UI.RIGHT, 400, 400, 120, 100, 0, content)
+	Gcairo:Exploder("Test2", self.image1, CAIRO_UI.RIGHT, 400, 400, 120, 100, 0, content)
+
+	--Gcairo:RenderMultiImage("prj_configure", self.multi, 100, 100, 2.3, 0.67, nil)
+	Gcairo:RenderMultiSlideImage("prj_configure", self.multi, 600, 100, 320, 2.3, 0.67, nil)
  
 	Gcairo:RenderSvg(50, 50, self.lsurf)
 	Gcairo:Update(self.mouse.x, self.mouse.y, self.buttons, dt)

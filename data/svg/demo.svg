@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   x="0"
+   y="0"
+   width="800.000000"
+   height="600.000000"
+   id="svg559">
+  <defs
+     id="defs561">
+    <linearGradient
+       id="linearGradient589">
+      <stop
+         style="stop-color:#00ffff;stop-opacity:1.0000;"
+         offset="0"
+         id="stop590" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop591" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient583">
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1.0000;"
+         offset="0"
+         id="stop584" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000;"
+         offset="1"
+         id="stop585" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient578">
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1.0000;"
+         offset="0"
+         id="stop579" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000;"
+         offset="1"
+         id="stop580" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient573">
+      <stop
+         style="stop-color:#00ff00;stop-opacity:1.0000;"
+         offset="0"
+         id="stop574" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000;"
+         offset="1"
+         id="stop575" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient567">
+      <stop
+         style="stop-color:#000000;stop-opacity:1.0000;"
+         offset="0"
+         id="stop568" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000;"
+         offset="1"
+         id="stop569" />
+    </linearGradient>
+    <linearGradient
+       x1="1.230863e-8"
+       y1="-2.084443e-6"
+       x2="0.999999"
+       y2="-2.084443e-6"
+       id="linearGradient570"
+       xlink:href="#linearGradient567"
+       spreadMethod="pad" />
+    <linearGradient
+       id="linearGradient572"
+       xlink:href="#linearGradient573" />
+    <linearGradient
+       x1="-1.284595e-10"
+       y1="3.294485e-8"
+       x2="1"
+       y2="3.294485e-8"
+       id="linearGradient577"
+       xlink:href="#linearGradient578" />
+    <linearGradient
+       x1="-9.526207e-9"
+       y1="-5.004816e-8"
+       x2="1"
+       y2="-5.004816e-8"
+       id="linearGradient582"
+       xlink:href="#linearGradient583" />
+    <linearGradient
+       x1="0.484615"
+       y1="0.492188"
+       x2="0.476923"
+       y2="0.101563"
+       id="linearGradient587"
+       xlink:href="#linearGradient583" />
+    <radialGradient
+       cx="0.500000"
+       cy="0.500000"
+       r="0.482078"
+       fx="0.500000"
+       fy="0.500000"
+       id="radialGradient588"
+       xlink:href="#linearGradient589" />
+  </defs>
+  <ellipse
+     cx="41.34070"
+     cy="38.94764"
+     rx="41.34070"
+     ry="36.61606"
+     transform="translate(1.181164,0)"
+     style="font-size:12.000;fill:#ff0000;fill-rule:evenodd;"
+     id="path562" />
+  <ellipse
+     cx="759.4877"
+     cy="561.6122"
+     rx="41.34067"
+     ry="39.56894"
+     transform="translate(-1.181183,-1.181145)"
+     style="font-size:12.000;fill:#ff0000;fill-rule:evenodd;"
+     id="path563" />
+  <ellipse
+     cx="761.8500"
+     cy="44.85346"
+     rx="38.97836"
+     ry="42.52188"
+     style="font-size:12.000;fill:#ff0000;fill-rule:evenodd;"
+     id="path564" />
+  <ellipse
+     cx="39.56895"
+     cy="567.5180"
+     rx="37.20663"
+     ry="33.66315"
+     transform="translate(-1.181163,-1.181145)"
+     style="font-size:12.000;fill:#ff0000;fill-rule:evenodd;"
+     id="path565" />
+  <rect
+     width="732.320923"
+     height="93.3119278"
+     x="31.8913994"
+     y="477.159088"
+     style="font-size:12.000;fill:url(#linearGradient570);"
+     id="rect566" />
+  <rect
+     width="731.139771"
+     height="142.920700"
+     x="31.8913994"
+     y="334.238312"
+     style="font-size:12.000;fill:url(#linearGradient572);fill-rule:evenodd;"
+     id="rect571" />
+  <rect
+     width="732.320923"
+     height="139.377197"
+     x="30.7102394"
+     y="194.861206"
+     style="font-size:12.000;fill:url(#linearGradient577);fill-rule:evenodd;"
+     id="rect576" />
+  <rect
+     width="733.502075"
+     height="155.913406"
+     x="31.8913994"
+     y="38.9477386"
+     style="font-size:12.000;fill:url(#linearGradient582);fill-rule:evenodd;"
+     id="rect581" />
+  <ellipse
+     cx="416.3599"
+     cy="337.7819"
+     rx="202.5694"
+     ry="199.6165"
+     transform="matrix(1.183432,0,0,1.183432,-102.3593,-95.03258)"
+     style="font-size:12.000;fill:#000080;fill-opacity:0.482800;fill-rule:evenodd;"
+     id="path586" />
+</svg>

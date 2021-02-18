@@ -42,9 +42,12 @@ local cairo_ui = {}
 ------------------------------------------------------------------------------------------------------------
 
 local function AddLibrary( lib, fname ) 
-	local res = sys.load_resource(fname)
-	print("Loaded: ", fname)
-	local tlib = assert(loadstring(res))()
+	local tlib = fname
+	if(type(fname) == "string") then
+		local res = sys.load_resource(fname)
+		print("Loaded: ", fname)
+		tlib = assert(loadstring(res))() 
+	end 
 	for k,v in pairs(tlib) do
 		lib[k] = v
 	end
@@ -62,12 +65,20 @@ end
 ------------------------------------------------------------------------------------------------------------
 -- The files below are able to use the local namespace to work correctly with cairo_ui
 
-AddLibrary(cairo_ui, "/scripts/cairo_ui/operations.lua")
-AddLibrary(cairo_ui, "/scripts/cairo_ui/text.lua")
-AddLibrary(cairo_ui, "/scripts/cairo_ui/images.lua")
-AddLibrary(cairo_ui, "/scripts/cairo_ui/import_svg.lua")
-AddLibrary(cairo_ui, "/scripts/cairo_ui/widgets.lua")
-AddLibrary(cairo_ui, "/scripts/cairo_ui/widget_handlers.lua")
+local operations = require("/scripts/cairo_ui/operations")
+local utext  = require("/scripts/cairo_ui/text")
+local images = require("/scripts/cairo_ui/images")
+local import_svg = require("/scripts/cairo_ui/import_svg")
+local widgets = require("/scripts/cairo_ui/widgets")
+local widget_handlers = require("/scripts/cairo_ui/widget_handlers")
+
+-- These objects are added to the global cairo_ui namespace
+AddLibrary(cairo_ui, operations)
+AddLibrary(cairo_ui, utext)
+AddLibrary(cairo_ui, images)
+AddLibrary(cairo_ui, import_svg)
+AddLibrary(cairo_ui, widgets)
+AddLibrary(cairo_ui, widget_handlers)
 
 ------------------------------------------------------------------------------------------------------------
 

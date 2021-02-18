@@ -1,10 +1,15 @@
 ------------------------------------------------------------------------------------------------------------
 
+print(package.path)
+local xml2lua = require("scripts.libs.xml2lua")
+--Uses a handler that converts the XML to a Lua table
+local xmlhandler = require("scripts.libs.xmlhandler.tree")
+
 local import_svg = {}
 
 ------------------------------------------------------------------------------------------------------------
 
-function import_svg:BuildSvg(label, svgdata)
+import_svg.BuildSvg = function(self, label, svgdata)
 
 	if(type(svgdata) ~= "table") then return end
     -- Override the label if it has been provided
@@ -36,7 +41,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 
-function import_svg:RenderSvg(x, y, svgdata)
+import_svg.RenderSvg = function(self, x, y, svgdata)
 
     if(type(svgdata) ~= "table") then return end
 	cr.cairo_save(self.ctx)
@@ -48,7 +53,35 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 
-function import_svg:RecursiveRenderSvg(svgdata, label)
+import_svg.GetStyle = function( self, style )
+
+	local sc = nil
+	local fc = nil 
+	local swidth = nil 
+	
+	if(style) then 
+		-- Example: style="font-size:12.000;fill:#ff0000;fill-rule:evenodd;"
+		local props = {}
+		for key, value in string.gmatch(style, "([^: ]+):([^;]+);") do props[key] = value end
+
+		-- If fill begins with url then its a reference - disable for time being 
+		local fill = props["fill"]
+		if(fill) then 
+			if( string.find(fill, "url") == 1 ) then 
+				fc = ConvertToRGB("#ffffff") 
+			else 
+				fc = ConvertToRGB(props["fill"])
+			end
+			sc = fc
+		end
+		if(props["font-size"]) then swidth = tonumber(props["font-size"]) end
+	end 
+	return swidth, sc, fc 
+end 
+
+------------------------------------------------------------------------------------------------------------
+
+import_svg.RecursiveRenderSvg = function(self, svgdata, label)
 
 	if(type(svgdata) ~= "table") then return end
 	-- Override the label if it has been provided
@@ -71,8 +104,13 @@ function import_svg:RecursiveRenderSvg(svgdata, label)
 		if(opacity) then a = opacity end
 		
 		local sc = xargs["stroke"]
+		local color = { r=sc.r, g=sc.g, b=sc.b, a=a }
+		local style = xargs["style"]
+		
+		-- Try newer style property
+		if(style) then swidth, sc, fc = self:GetStyle( style ) end
+		
 		local str = svgdata[1]
-        local color = { r=sc.r, g=sc.g, b=sc.b, a=a }
 		if(str ~= nil) then self:RenderText( str, x, y, fsize, color ) end
 
 
@@ -85,10 +123,15 @@ function import_svg:RecursiveRenderSvg(svgdata, label)
 		local cx 		= tonumber(xargs["cx"])
 		local cy 		= tonumber(xargs["cy"])
 		local opacity	= tonumber(xargs["opacity"])
-		
+
+		-- Old svg stroke property
 		local sc = xargs["stroke"]
 		local fc = xargs["fill"]
+		local style = xargs["style"]
 
+		-- Try newer style property
+		if(style) then swidth, sc, fc = self:GetStyle( style ) end
+		
 		cr.cairo_save (self.ctx)
 		local a 		= 1.0
 		if(opacity) then a = opacity end
@@ -123,7 +166,11 @@ function import_svg:RecursiveRenderSvg(svgdata, label)
 
 		local a 		= 1.0
 		if(opacity ~= nil) then a = opacity end
-
+		local style = xargs["style"]
+		
+		-- Try newer style property
+		if(style) then swidth, sc, fc = self:GetStyle( style ) end
+		
         cr.cairo_set_source_rgba(self.ctx, sc.r, sc.g, sc.b, a)
         cr.cairo_set_line_width (self.ctx, width);
 
@@ -142,7 +189,11 @@ function import_svg:RecursiveRenderSvg(svgdata, label)
 		local opacity	= tonumber(xargs["opacity"])
 
 		local swidth 	= tonumber(xargs["stroke-width"])
-
+		local style = xargs["style"]
+		
+		-- Try newer style property
+		if(style) then swidth, sc, fc = self:GetStyle( style ) end
+		
 		if(xargs["d"]) then
 
 			local a 		= 1.0
@@ -179,8 +230,12 @@ function import_svg:RecursiveRenderSvg(svgdata, label)
 		
 		local a 		= 1.0
 		if(opacity) then a = opacity end
-
-        cr.cairo_set_line_width (self.ctx, swidth);
+		local style = xargs["style"]
+		
+		-- Try newer style property
+		if(style) then swidth, sc, fc = self:GetStyle( style ) end
+		
+        cr.cairo_set_line_width (self.ctx, swidth)
 		cr.cairo_set_source_rgba(self.ctx, sc.r, sc.g, sc.b, a)
         cr.cairo_rectangle(self.ctx, x, y, width, height)
         cr.cairo_stroke_preserve (self.ctx)
@@ -201,9 +256,15 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 
-function import_svg:LoadSvg(filename)
+import_svg.LoadSvg = function( self, filename)
 
     local xmldata = LoadXml(filename, 1)
+
+	local xml = sys.load_resource(filename)
+	--Instantiates the XML parser
+	local parser = xml2lua.parser(xmlhandler)
+	parser:parse(xml)
+	-- xml2lua.printable(xmlhandler.root)
 
 	-- Root level should have svg label and xargs containing surface information
     local svgdata = xmldata.svg
@@ -226,7 +287,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------
 
-function import_svg:AddSvg(svgdata)
+import_svg.AddSvg = function(self, svgdata)
 
     table.insert(self.svgs, svgdata)
 end

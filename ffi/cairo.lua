@@ -1,9 +1,10 @@
 local ffi 	= package.preload.ffi()
 
 local libs = ffi_cairo_libs or {
-   Windows = { x86 = "libs/win32/x86/cairo.dll", x64 = "libs/win32/x64/cairo.dll" },
-   OSX     = { x86 = "libs/osx/cairo.dylib", x64 = "libs/OSX/cairo.dylib" },
-   Linux   = { x86 = "libs/linux/x86/libcairo.so.2", x64 = "libs/linux/x64/libcairo.so.2", arm = "cairo" },
+    Android = { arm = "libs/android/armv7/libcairo.so.2", arm64 = "libs/android/arm64/libcairo.so.2" },
+    Windows = { x86 = "libs/win32/x86/cairo.dll", x64 = "libs/win32/x64/cairo.dll" },
+    OSX     = { x86 = "libs/osx/cairo.dylib", x64 = "libs/osx/cairo.dylib" },
+    Linux   = { x86 = "libs/linux/x86/libcairo.so.2", x64 = "libs/linux/x64/libcairo.so.2", arm = "cairo" },
 }
 
 local cr = ffi.load( ffi_cairo_lib or libs[ ffi.os ][ ffi.arch ] or "cairo" )

@@ -14,9 +14,10 @@ input_method = HiddenInputField
 
 [project]
 title = defold_cairo
-custom_resources = scripts/, data/, ffi/, input/
+custom_resources = scripts/, data/, ffi/
 bundle_resources = /libs, /data
+dependencies = 
 
 [library]
-include_dirs = 
+include_dirs = imageloader
 
