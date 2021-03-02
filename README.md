@@ -1,5 +1,7 @@
 # Cairo for Defold
 
+Note: This is for applications only (at the moment). Web deployment may be possible - to be investigated.
+
 The aim is to provide a cairo based UI for Defold to make building interesting and modern interfaces easier.
 
 The current systems uses a state manager to control the flow of UI execution. This is _not_ required. This is to make building GUI applications a little easier and it maps in nicely to Defold state processes.
